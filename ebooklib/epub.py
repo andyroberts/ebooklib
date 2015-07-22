@@ -23,6 +23,7 @@ import logging
 import uuid
 import posixpath as zip_path
 import os.path
+import re
 
 try:
     from urllib.parse import unquote
