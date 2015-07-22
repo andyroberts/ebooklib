@@ -647,7 +647,8 @@ class EpubWriter(object):
                 etree.SubElement(manifest, 'item', opts)
 
         # SPINE
-        spine = etree.SubElement(root, 'spine', {'toc': _ncx_id or 'ncx'})
+        spine_attributes = {}
+        spine = etree.SubElement(root, 'spine', spine_attributes)
 
         for _item in self.book.spine:
             # this is for now
