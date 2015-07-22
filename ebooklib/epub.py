@@ -882,7 +882,10 @@ class EpubWriter(object):
         return tree_str
 
     def _write_items(self):
+        remote_resource_re = re.compile(r'http(s)?://')
         for item in self.book.get_items():
+            if remote_resource_re.match(item.file_name):
+                continue
             if isinstance(item, EpubNcx):
                 self.out.writestr('%s/%s' % (self.book.FOLDER_NAME, item.file_name), self._get_ncx())
             elif isinstance(item, EpubNav):
