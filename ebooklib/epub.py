@@ -560,7 +560,10 @@ class EpubWriter(object):
                               'unique-identifier' : self.book.IDENTIFIER_ID,
                               'version' : '3.0'})
 
-        root.attrib['prefix'] = 'rendition: http://www.idpf.org/vocab/rendition/#'
+
+        INCLUDE_RENDITION = False
+        if INCLUDE_RENDITION:
+            root.attrib['prefix'] = 'rendition: http://www.idpf.org/vocab/rendition/#'
 
         ## METADATA
 
