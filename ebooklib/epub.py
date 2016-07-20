@@ -652,6 +652,8 @@ class EpubWriter(object):
 
         # SPINE
         spine_attributes = {}
+        if _ncx_id != None:
+            spine_attributes['toc'] = _ncx_id
         spine = etree.SubElement(root, 'spine', spine_attributes)
 
         for _item in self.book.spine:
