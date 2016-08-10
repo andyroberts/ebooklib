@@ -555,10 +555,19 @@ class EpubWriter(object):
         self.out.writestr(CONTAINER_PATH, container_xml)
 
     def _write_opf_file(self):
-        root = etree.Element('package',
-                             {'xmlns' : NAMESPACES['OPF'],
+
+        default_package_attributes = {'xmlns' : NAMESPACES['OPF'],
                               'unique-identifier' : self.book.IDENTIFIER_ID,
-                              'version' : '3.0'})
+                              'version' : '3.0'}
+
+        
+        if self.book.metadata_package_attributes:
+            package_attributes = self.book.metadata_package_attributes
+        else:
+            package_attributes = default_package_attributes.copy()
+
+        root = etree.Element('package',
+                             package_attributes)
 
 
         INCLUDE_RENDITION = False
@@ -568,17 +577,16 @@ class EpubWriter(object):
         ## METADATA
 
 
-        nsmap = {'dc': NAMESPACES['DC'], 'opf': NAMESPACES['OPF']}
+        if self.book.metadata_nsmap:
+            nsmap = self.book.metadata_nsmap
+        else:
+            nsmap = {'dc': NAMESPACES['DC'], 'opf': NAMESPACES['OPF']}
 
-        # This is really not needed
-        # problem is uppercase/lowercase
-
-        # for ns_name, values in six.iteritems(self.book.metadata):
-        #     if ns_name:
-        #         for n_id, ns_url in six.iteritems(NAMESPACES):
-        #             if ns_name == ns_url:
-        #                 nsmap[n_id.lower()] = NAMESPACES[n_id]
-
+            for ns_name, values in six.iteritems(self.book.metadata):
+                if ns_name:
+                    for n_id, ns_url in six.iteritems(NAMESPACES):
+                        if ns_name == ns_url:
+                            nsmap[n_id.lower()] = NAMESPACES[n_id]
         metadata = etree.SubElement(root, 'metadata', nsmap = nsmap)
 
         el = etree.SubElement(metadata, 'meta', {'property':'dcterms:modified'})
@@ -650,6 +658,7 @@ class EpubWriter(object):
 
                 etree.SubElement(manifest, 'item', opts)
 
+        print (etree.tostring(manifest))
         # SPINE
         spine_attributes = {}
         if _ncx_id != None:
@@ -964,6 +973,8 @@ class EpubReader(object):
     def _load_metadata(self):
         container_root = self.container.getroot()
 
+        self.book.metadata_package_attributes = container_root.attrib
+
         # get epub version
         self.book.version = container_root.get('version', None)
 
@@ -975,9 +986,11 @@ class EpubReader(object):
         # get metadata
         metadata = self.container.find('{%s}%s' % (NAMESPACES['OPF'], 'metadata'))
 
+
         nsmap = metadata.nsmap
         nstags = dict((k, '{%s}' % v) for k, v in six.iteritems(nsmap))
         default_ns = nstags.get(None, '')
+
 
         nsdict = dict((v, {}) for v in nsmap.values())
 
@@ -1014,6 +1027,7 @@ class EpubReader(object):
                 add_item(t.nsmap[t.prefix], tag, t.text, others)
 
         self.book.metadata = nsdict
+        self.book.metadata_nsmap = nsmap
 
         titles = self.book.get_metadata('DC', 'title')
         if len(titles) > 0:
@@ -1058,6 +1072,7 @@ class EpubReader(object):
 
                     ei.id = r.get('id')
                     ei.file_name = unquote(r.get('href'))
+
                     ei.media_type = media_type
                     ei.content = self.read_file(zip_path.join(self.opf_dir, ei.get_name()))
                     ei.properties = properties
