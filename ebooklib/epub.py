@@ -562,9 +562,15 @@ class EpubWriter(object):
 
         
         if self.book.metadata_package_attributes:
-            package_attributes = self.book.metadata_package_attributes
+
+            source_attributes = {}
+            for attribute in self.book.metadata_package_attributes:
+                source_attributes[attribute] = self.book.metadata_package_attributes[attribute]
+
+            package_attributes = source_attributes.copy()
+            package_attributes.update(default_package_attributes)
         else:
-            package_attributes = default_package_attributes.copy()
+            package_attributes = default_package_attributes
 
         root = etree.Element('package',
                              package_attributes)
@@ -601,8 +607,13 @@ class EpubWriter(object):
             if ns_name == NAMESPACES['OPF']:
                 for values in values.values():
                     for v in values:
+
                         if 'property' in v[1] and v[1]['property'] == "dcterms:modified":
                             continue
+                        if 'property' in v[1] and v[1]['property'] == "identifier-type":
+                            if 'refines' in v[1] and v[1]['refines'] != '#' + self.book.IDENTIFIER_ID:
+                                continue
+
                         try:
                             el = etree.SubElement(metadata, 'meta', v[1])
                             if v[0]:
@@ -621,7 +632,6 @@ class EpubWriter(object):
                             el.text = v[0]
                         except ValueError:
                             logging.error('Could not create metadata "{}".'.format(name))
-
 
         # MANIFEST
         manifest = etree.SubElement(root, 'manifest')
@@ -658,7 +668,6 @@ class EpubWriter(object):
 
                 etree.SubElement(manifest, 'item', opts)
 
-        print (etree.tostring(manifest))
         # SPINE
         spine_attributes = {}
         if _ncx_id != None:
