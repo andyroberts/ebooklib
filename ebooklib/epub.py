@@ -157,7 +157,7 @@ class EpubNcx(EpubItem):
         super(EpubNcx, self).__init__(uid=uid, file_name=file_name, media_type="application/x-dtbncx+xml")
 
     def __str__(self):
-        return '<EpubNcx:%s>' % self.id
+        return '<EpubNcx:%s:%s>' % (self.id, self.file_name)
 
 
 class EpubCover(EpubItem):
