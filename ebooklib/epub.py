@@ -17,7 +17,6 @@
 import sys
 import zipfile
 import io
-import six
 import mimetypes
 import logging
 import uuid
@@ -137,7 +136,7 @@ class EpubItem(object):
         _, ext = zip_path.splitext(self.get_name())
         ext = ext.lower()
 
-        for uid, ext_list in six.iteritems(ebooklib.EXTENSIONS):
+        for uid, ext_list in iter(ebooklib.EXTENSIONS.items()):
             if ext in ext_list:
                 return uid
 
@@ -588,9 +587,9 @@ class EpubWriter(object):
         else:
             nsmap = {'dc': NAMESPACES['DC'], 'opf': NAMESPACES['OPF']}
 
-            for ns_name, values in six.iteritems(self.book.metadata):
+            for ns_name, values in iter(self.book.metadata.items()):
                 if ns_name:
-                    for n_id, ns_url in six.iteritems(NAMESPACES):
+                    for n_id, ns_url in iter(NAMESPACES.items()):
                         if ns_name == ns_url:
                             nsmap[n_id.lower()] = NAMESPACES[n_id]
         metadata = etree.SubElement(root, 'metadata', nsmap = nsmap)
@@ -603,7 +602,7 @@ class EpubWriter(object):
             mtime = datetime.datetime.now()
         el.text = mtime.strftime('%Y-%m-%dT%H:%M:%SZ')
 
-        for ns_name, values in six.iteritems(self.book.metadata):
+        for ns_name, values in iter(self.book.metadata.items()):
             if ns_name == NAMESPACES['OPF']:
                 for values in values.values():
                     for v in values:
@@ -621,7 +620,7 @@ class EpubWriter(object):
                         except ValueError:
                             logging.error('Could not create metadata.')
             else:
-                for name, values in six.iteritems(values):
+                for name, values in iter(values.items()):
                     for v in values:
                         try:
                             if ns_name:
@@ -997,7 +996,7 @@ class EpubReader(object):
 
 
         nsmap = metadata.nsmap
-        nstags = dict((k, '{%s}' % v) for k, v in six.iteritems(nsmap))
+        nstags = dict((k, '{%s}' % v) for k, v in iter(nsmap.items()))
         default_ns = nstags.get(None, '')
 
 
