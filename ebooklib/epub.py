@@ -33,7 +33,7 @@ from lxml import etree
 
 import ebooklib
 
-from ebooklib.utils import parse_string, parse_html_string
+from ebooklib.utils import parse_string, parse_xhtml_string
 
 
 # This really should not be here
@@ -211,7 +211,7 @@ class EpubHtml(EpubItem):
         content = self.get_content()
 
         try:
-            html_tree = parse_html_string(self.content)
+            html_tree = parse_xhtml_string(self.content)
         except:
             return ''
 
@@ -243,7 +243,7 @@ class EpubHtml(EpubItem):
         #  <meta charset="utf-8" />
 
         try:
-            html_tree = parse_html_string(self.content)
+            html_tree = parse_xhtml_string(self.content)
         except:
             return ''
 
@@ -1144,7 +1144,7 @@ class EpubReader(object):
 
 
     def _parse_nav(self, data, base_path):
-        html_node = parse_html_string(data)
+        html_node = parse_xhtml_string(data)
         nav_node = html_node.xpath("//nav[@*='toc']")[0]
 
         def parse_list(list_node):

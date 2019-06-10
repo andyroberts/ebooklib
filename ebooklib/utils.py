@@ -15,7 +15,7 @@
 # along with EbookLib.  If not, see <http://www.gnu.org/licenses/>.
 
 import io
-from lxml import etree
+from lxml import html, etree
 
 def debug(obj):
     import pprint
@@ -39,3 +39,8 @@ def parse_html_string(s):
     html_tree = html.document_fromstring(s , parser=utf8_parser)
 
     return html_tree
+
+def parse_xhtml_string(s):
+    parser = etree.XMLParser(encoding='utf-8')
+    tree = etree.fromstring(s, parser=parser)
+    return tree
