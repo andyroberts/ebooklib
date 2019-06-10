@@ -41,6 +41,10 @@ def parse_html_string(s):
     return html_tree
 
 def parse_xhtml_string(s):
+    
     parser = etree.XMLParser(encoding='utf-8')
+    use_html_parser = True
+    if use_html_parser:
+        parser = html.HTMLParser(encoding='utf-8')
     tree = etree.fromstring(s, parser=parser)
     return tree
