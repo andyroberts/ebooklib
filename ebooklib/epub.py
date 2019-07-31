@@ -282,7 +282,10 @@ class EpubHtml(EpubItem):
                 _body.append(i)
 
         tree_str = etree.tostring(tree, pretty_print=True, encoding='utf-8', xml_declaration=True)
-
+        
+        #TODO: remove hack once we've worked out how to use the xml parser
+        # Hack due to covers often using svg, but attributes being mangled by htmlparser
+        tree_str = tree_str.replace(b'viewbox=', b'viewBox=')
         return tree_str
 
     def __str__(self):
