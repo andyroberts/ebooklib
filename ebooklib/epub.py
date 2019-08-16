@@ -277,6 +277,7 @@ class EpubHtml(EpubItem):
         _body = etree.SubElement(tree_root, 'body')
 
         body = html_tree.find('body')
+        _body.attrib.update(body.attrib)
         if body is not None:
             for i in body.getchildren():
                 _body.append(i)
