@@ -24,10 +24,19 @@ def debug(obj):
     pp.pprint(obj)
 
 def parse_string(s):
+
+    if isinstance(s, str):
+        encoded_string = s.encode('utf-8')
+    else:
+        encoded_string = s    
+
+    encoded_string = encoded_string.replace(b"\r\n", b"\n")
     try:
-        tree = etree.parse(io.BytesIO(s.encode('utf-8')))
+        tree = etree.parse(io.BytesIO(encoded_string))
+        
     except:
-        tree = etree.parse(io.BytesIO(s))
+        raise Exception('Can\'t parse encoded string')
+        pass
 
     return tree
 
@@ -41,7 +50,9 @@ def parse_html_string(s):
     return html_tree
 
 def parse_xhtml_string(s):
-    
+    if isinstance(s, bytes):
+        s = s.replace(b"\r\n", b"\n")
+
     parser = etree.XMLParser(encoding='utf-8')
     use_html_parser = True
     if use_html_parser:
