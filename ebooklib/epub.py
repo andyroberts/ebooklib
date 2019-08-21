@@ -279,7 +279,6 @@ class EpubHtml(EpubItem):
         body = html_tree.find('body')
         # TODO: work out why prefixed attributes are causing errors
         for attr_key in body.attrib.keys():
-            print(attr_key, body.attrib.get(attr_key))
             if attr_key.startswith('epub:'):
                 pass
             elif attr_key.startswith('xml:'):
@@ -287,7 +286,6 @@ class EpubHtml(EpubItem):
                 pass
             else:
                 _body.attrib[attr_key] = body.attrib.get(attr_key)
-        print(_body.attrib)
         if body is not None:
             for i in body.getchildren():
                 _body.append(i)
