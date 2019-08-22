@@ -284,6 +284,8 @@ class EpubHtml(EpubItem):
             elif attr_key.startswith('xml:'):
                 #_body.attrib["{{{0}}}{1}".format('http://www.w3.org/1999/xhtml', attr_key)] = body.attrib.get(attr_key)
                 pass
+            elif attr_key.startswith('xmlns:'):
+                pass
             else:
                 _body.attrib[attr_key] = body.attrib.get(attr_key)
         if body is not None:
