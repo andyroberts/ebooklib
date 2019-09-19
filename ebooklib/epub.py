@@ -101,6 +101,9 @@ class Link(object):
         self.title = title
         self.uid = uid
 
+    def __repr__(self):
+        return "<Link uid:%s; href:%s; title:%s;" % (self.uid, self.href, self.title)
+
 ## Exceptions
 
 class EpubException(Exception):
@@ -149,7 +152,8 @@ class EpubItem(object):
         self.content = content
 
     def __str__(self):
-        return '<EpubItem:%s>' % self.id
+        return '<EpubItem:%s; file_name:%s; media_type:%s>' % self.id, self.file_name, self.media_type
+        #return '<EpubItem:%s>' % self.id
 
 class EpubNcx(EpubItem):
     def __init__(self, uid='ncx', file_name='toc.ncx'):
@@ -301,7 +305,8 @@ class EpubHtml(EpubItem):
 
     def __str__(self):
         return '<EpubHtml:%s:%s>' % (self.id, self.file_name)
-
+    def __repr__(self):
+        return "<EpubHtml id:%s; file_name:%s; media_type%s; title:%s" % (self.id, self.file_name, self.media_type, self.title)
 
 class EpubCoverHtml(EpubHtml):
     def __init__(self, uid='cover', file_name='cover.xhtml', image_name='', title='Cover'):
