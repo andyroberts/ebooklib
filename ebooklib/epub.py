@@ -1093,7 +1093,7 @@ class EpubReader(object):
                 elif 'cover' in properties:
                     ei = EpubCoverHtml()
 
-                    ei.content = self.read_file(os_path.join(self.opf_dir,  unquote(r.get('href'))))
+                    ei.content = self.read_file(zip_path.join(self.opf_dir,  unquote(r.get('href'))))
                 else:
                     ei = EpubHtml()
 
