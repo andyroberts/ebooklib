@@ -152,7 +152,7 @@ class EpubItem(object):
         self.content = content
 
     def __str__(self):
-        return '<EpubItem:%s; file_name:%s; media_type:%s>' % self.id, self.file_name, self.media_type
+        return '<EpubItem:%s; file_name:%s; media_type:%s>' % (self.id, self.file_name, self.media_type)
         #return '<EpubItem:%s>' % self.id
 
 class EpubNcx(EpubItem):
@@ -340,6 +340,9 @@ class EpubCoverHtml(EpubHtml):
     def __str__(self):
         return '<EpubCoverHtml:%s:%s>' % (self.id, self.file_name)
 
+    def __repr__(self):
+        return '<EpubCoverHtml:%s:%s>' % (self.id, self.file_name)
+
 class EpubNav(EpubHtml):
     def __init__(self, uid='nav', file_name='nav.xhtml', media_type="application/xhtml+xml"):
         super(EpubNav, self).__init__(uid=uid, file_name=file_name, media_type=media_type)
@@ -361,6 +364,8 @@ class EpubImage(EpubItem):
     def __str__(self):
         return '<EpubImage:%s:%s>' % (self.id, self.file_name)
 
+    def __repr__(self):
+        return self.__str__()
 
 ## EpubBook
 
