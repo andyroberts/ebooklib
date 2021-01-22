@@ -1154,7 +1154,7 @@ class EpubReader(object):
                 if a.tag == '{%s}navLabel' %  NAMESPACES['DAISY']:
                     label = a.getchildren()[0].text
                 if a.tag == '{%s}content' %  NAMESPACES['DAISY']:
-                        content = a.get('src')
+                    content = a.get('src')
                 if a.tag == '{%s}navPoint' %  NAMESPACES['DAISY']:
                     children.append(_get_children(a, n+1, a.get('id', '')))
 
@@ -1162,8 +1162,9 @@ class EpubReader(object):
                 if n == 0:
                     return children
 
-                return (Section(label),
-                        children)
+                s = Section(label)
+                s.content = content
+                return (s, children)
             else:
                 return (Link(content, label, nid))
 
